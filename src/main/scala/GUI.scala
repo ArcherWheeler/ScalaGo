@@ -90,7 +90,7 @@ class UI extends MainFrame {
     println("at coordinate " + x + " " + y)
 
     if((x >= 0) && (y >= 0) && (board.size >= x) && (board.size >= y)){
-      board = board.placeStone(x,y).get
+      board = MCTSplayer.playMove(board)
       board.seeIt()
       canvas.b = board
       canvas.repaint()

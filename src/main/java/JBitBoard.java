@@ -29,6 +29,12 @@ public class JBitBoard {
             }
         }
 
+        private BitMask shiftedUp(){
+            BitSet shifted = arr.get(size, arr.length());
+            return new BitMask(shifted, size);
+        }
+
+
         private void merge(BitMask mask){
             arr.or(mask.arr);
         }
@@ -161,6 +167,17 @@ public class JBitBoard {
         copy.opponentGroups = og;
         return copy;
     }
+
+    //Pattern is 3x3 position in bottom right
+//    private List<Integer> findPatternInBoard(BitMask pattern){
+//        for(int i=0; i < size-3; i++){
+//            for(int j=0; j < size-3; j++){
+//                BitSet shifted = pattern.arr.get(i, pattern.arr.length());
+//            }
+//        }
+//        pattern.shave(allStones);
+//        pattern.arr.cardinality()
+//    }
 
     public int size(){
         return size;

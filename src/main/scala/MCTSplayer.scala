@@ -8,6 +8,8 @@ object BoardTree{
   val r: Random = new Random()
   val epsilon = 1e-6
   val r2 = math.sqrt(2)
+
+  var totalVisits = 0
 }
 
 class BoardTree(_board: Board, _depth: Int){
@@ -21,6 +23,9 @@ class BoardTree(_board: Board, _depth: Int){
     children = for {b <- board.getLegalMoves} yield { new BoardTree(b, depth+1)  }
   }
 
+//  val heuristics: List[Heuristic]
+//  val heuristicValues: List[(Double, Double)]
+
   var totValue: Double = 0.0
   var numVisits: Double = 0.0
   def value = if (numVisits == 0.0) 0.0
@@ -29,7 +34,7 @@ class BoardTree(_board: Board, _depth: Int){
   def selectBestChild: BoardTree = {
     val UtcVals= for (child <- children)
       yield {
-          child.value + (BoardTree.r2*math.sqrt(math.log(numVisits) / (child.numVisits + 1)))
+          child.value + (BoardTree.r2*math.sqrt(math.log(BoardTree.totalVisits) / (child.numVisits + 1)))
           // small random number to break ties randomly in unexpanded nodes
         + BoardTree.r.nextDouble() * BoardTree.epsilon
       }
@@ -38,6 +43,7 @@ class BoardTree(_board: Board, _depth: Int){
 
   def updateStats(wins: Double): Unit = {
     numVisits += 1
+    BoardTree.totalVisits += 1
     totValue += wins
   }
 
@@ -48,7 +54,7 @@ object MCTSplayer {
 
   val epsilon = 1e-6
   val NUM_ROLLOUTS = 100
-  val NUM_EXPANSIONS = 1000
+  val NUM_EXPANSIONS = 800
 
   val r: Random = new Random()
   val rollOutHeuristic = RollOut
@@ -85,7 +91,7 @@ object MCTSplayer {
 
       val newNode = node.selectBestChild
       wins = rollout(newNode.board)
-//      println("depth: " + newNode.depth)
+      println("depth: " + newNode.depth)
     }
 
     for(v <- visited){
